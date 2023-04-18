@@ -9,7 +9,10 @@ This is a project developped during the final Module of **Case Study** from the 
 
 ## Available Deployment
 
+The interface is hosted through Streamlit. It is available at the following [Link](https://dorian-roux-clip-case-study-app-c97l2x.streamlit.app/).
+
 In the DEPLOYED Version, Options are to be expected in further development.
+
 </br>
 
 
