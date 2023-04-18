@@ -1,0 +1,7 @@
+requests
+pinecone-client
+fiftyone
+torch
+torchvision
+Pillow
+streamlit
