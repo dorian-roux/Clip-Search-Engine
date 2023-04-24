@@ -1,41 +1,72 @@
 # CLIP - Search Engine - Text Requests to Images
+> Made as the project of **Case Study** Module from the Engineer Path of CY TECH.
 
-This is a project developped during the final Module of **Case Study** from the Engineer Path of CY TECH, France. 
-</br>
+<br>
 
-## Project Description
-</br>
+It is a project based on the connection between text and images using [CLIP](https://openai.com/research/clip). We realized the project using [Python](https://www.python.org/), [Fiftyone](https://docs.voxel51.com/), [Pinecone](https://pinecone.io) and [Streamlit](https://streamlit.io/). The project is deployable through [Docker](https://www.docker.com/).
+We describe the project with the following sections.
+- [I. Project Demonstration](#project-demonstration)
+- [II. Repository Structure](#repository-structure)
+- [III. Project Description](#project-description)
+- [IV. Project Deployment](#project-deployment)
+    - [Online Deployment](#online-deployment)
+    - [Local Deployment](#local-deployment)
 
 
-## Available Deployment
+## I. Project Demonstration
+<img src="./src/static/gif/Demonstration.gif"/>
+
+<br>
+
+## II. Repository Structure
+The structure of this repository is described below. It contains the source code of the project as well as the Dockerfile used to build the Docker Image.
+
+```bash
+├── app.py  
+├── Dockerfile  
+├── requirements.txt    
+└── src    
+    ├── embedding.py  
+    ├── fiftyone_datasets_models.py  
+    ├── static    
+    │   └── images  
+    │       └── iconCYTECH.png  
+    └── utils.py
+```
+<br>
+
+## III. Project Description
+
+In the recent years, AI has been improving quite a lot. The purpose of this project is to demonstrate the power of existing Computer Vision Model (CLIP from OpenAI) to build a Search Engine. The Search Engine is based on the connection between text and images. Thus, the user can type a text and the Search Engine will return the most relevant images based on the text.
+
+To realize this project, we used the following tools.
+- Fiftyone
+- Pinecone
+- Streamlit
+- Docker
+
+<br>
+
+
+## IV. Project Deployment
+
+### Online Deployment
 
 The interface is hosted through Streamlit. It is available at the following [Link](https://dorian-roux-clip-case-study-app-c97l2x.streamlit.app/).
 
-In the DEPLOYED Version, Options are to be expected in further development.
+<br>
 
-</br>
+### Local Deployment
 
+The local deployment is based on Docker. Thus, to correctly launch our interface, the [Docker](https://www.docker.com/) software must be installed. The deployment is relatively easy since it consists of the three steps described below.
 
-## Local Deployment
-### Prerequisite
-
-The local deployment is based on Docker. Thus, to correctly launch our interface, the following softwares must be installed.
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
-
-</br>
-
-### Launch the Interface
-
-The local deployment using Docker is really fast and simple since it consists of the three steps described below.
-
-#### 1° - Clone the Repository
+#### **1° - Clone the Repository**
 Firstly, you must clone this reposity. To do so, you can use the following command.
 ```bash
-git clone https://github.com/dorian-roux/DoLus-Sutom-APP
+git clone https://github.com/dorian-roux/Clip-Search-Engine
 ```
 
-#### 2° - Build the Docker Image
+#### **2° - Build the Docker Image**
 Secondly, you need to build the Docker Image based on this repository Dockerfile. To do so, you can use the following command.
 ```bash
 docker build -t {TAG} .
@@ -43,7 +74,7 @@ docker build -t {TAG} .
 <u>Note:</u> &nbsp; `{TAG}` is the name you want to give to your Docker Image. It is used to identify it later.
 
 
-#### 3° - Run the Docker Container
+#### **3° - Run the Docker Container**
 Finally, you need to run the Docker Container based on the Docker Image you just built. To do so, you can use the following command.
 ```bash
 docker run -p 8501:8501 {TAG}
