@@ -67,7 +67,7 @@ git clone https://github.com/dorian-roux/Clip-Search-Engine
 ```
 
 #### **2° - Obtain the Pinecone Key Parameters**
-Secondly, you must create a find your Picone Key parameters. To do so, you need to register in their [website](https://pinecone.io). Then you need to find the [Pinecone Console](https://app.pinecone.io/organizations) and keep both the **Pinecone Key** and **Pinecone Env**
+Secondly, you must create a find your Picone Key parameters. To do so, you need to register in their [website](https://pinecone.io). Then you need to find the [Pinecone Console](https://app.pinecone.io/organizations) and keep both the **Pinecone Key Value** and **Pinecone Key Environement**
 
 #### **3° - Build the Docker Image**
 Thirdly, you need to build the Docker Image based on this repository Dockerfile. To do so, you can use the following command.
