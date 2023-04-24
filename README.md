@@ -66,15 +66,18 @@ Firstly, you must clone this reposity. To do so, you can use the following comma
 git clone https://github.com/dorian-roux/Clip-Search-Engine
 ```
 
-#### **2° - Build the Docker Image**
-Secondly, you need to build the Docker Image based on this repository Dockerfile. To do so, you can use the following command.
+#### **2° - Obtain the Pinecone Key Parameters**
+Secondly, you must create a find your Picone Key parameters. To do so, you need to register in their [website](https://pinecone.io). Then you need to find the [Pinecone Console](https://app.pinecone.io/organizations) and keep both the **Pinecone Key** and **Pinecone Env**
+
+#### **3° - Build the Docker Image**
+Thirdly, you need to build the Docker Image based on this repository Dockerfile. To do so, you can use the following command.
 ```bash
 docker build -t {TAG} .
 ```
 <u>Note:</u> &nbsp; `{TAG}` is the name you want to give to your Docker Image. It is used to identify it later.
 
 
-#### **3° - Run the Docker Container**
+#### **4° - Run the Docker Container**
 Finally, you need to run the Docker Container based on the Docker Image you just built. To do so, you can use the following command.
 ```bash
 docker run -p 8501:8501 {TAG}
