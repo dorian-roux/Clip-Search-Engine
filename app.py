@@ -44,7 +44,7 @@ def setupVariables(nameVariable, exceptValue=None):
     return exceptValue
 
 # -- Variables --
-DISABLE_CONFIG_BUTTONS = setupVariables('DISABLE_CONFIG_BUTTONS', True)
+DISABLE_CONFIG_BUTTONS = setupVariables('DISABLE_CONFIG_BUTTONS', False)
 
 
 # -- Core Streamlit -- 
@@ -76,6 +76,7 @@ def main():
         st.session_state['warning_phase1'] = False
         st.session_state['warning_phase2'] = False
 
+        st.session_state['DISABLE_CONFIG_BUTTONS'] = DISABLE_CONFIG_BUTTONS
         st.session_state['pinecone_config'] = False
         st.session_state['PINECONE_KEY'] = PINECONE_KEY
         st.session_state['PINECONE_ENV'] = PINECONE_ENV
@@ -98,13 +99,13 @@ def main():
     if st.session_state['config_information']:
         st.write(st.session_state['config_information'], unsafe_allow_html=True)
         _, col1, _, col2, _ = st.columns([1.75, 4, 0.5, 4, 1.75]) 
-        if col1.button('Modify/Update the Configuration', disabled=DISABLE_CONFIG_BUTTONS):
+        if col1.button('Modify/Update the Configuration', disabled=st.session_state['DISABLE_CONFIG_BUTTONS']):
             st.session_state['PINECONE_KEY'] = ""
             st.session_state['PINECONE_INDEX_NAME'] = ""
             st.session_state['config_validation'] = False
             st.session_state['config_information'] = None
             st.experimental_rerun()
-        if col2.button('Re-Load the MODEL/DATASET', disabled=DISABLE_CONFIG_BUTTONS):
+        if col2.button('Re-Load the MODEL/DATASET', disabled=st.session_state['DISABLE_CONFIG_BUTTONS']):
             st.session_state['config_reload'] = True
             st.experimental_rerun()
             
@@ -119,9 +120,10 @@ def main():
                 # --- Display the CONFIGURATION FORM ---
                 with st.form("setup_form", clear_on_submit=False):
                         st.write('Insert the PINECONE KEY and ENVIRONMENT')
-                        col1, _, col2 = st.columns([5.25, 0.5, 5.25])
-                        st.session_state['PINECONE_KEY'] = col1.text_input(label='Insert your PINECONE KEY', value="")
-                        st.session_state['PINECONE_ENV'] = col2.text_input(label='Insert your PINECONE ENVIRONMENT', value=st.session_state['PINECONE_ENV'])
+                        col1, _, col2, _, col3 = st.columns([3.25, 0.25, 4, 0.5, 4])
+                        st.session_state['DISABLE_CONFIG_BUTTONS'] = col1.radio(label='Deactivate Home Config Button', options=[True, False], index=[True, False].index(st.session_state['DISABLE_CONFIG_BUTTONS']))
+                        st.session_state['PINECONE_KEY'] = col2.text_input(label='Insert your PINECONE KEY', value="")
+                        st.session_state['PINECONE_ENV'] = col3.text_input(label='Insert your PINECONE ENVIRONMENT', value=st.session_state['PINECONE_ENV'])
                         if st.session_state['warning_phase1']:
                             st.warning(body='PINECONE KEY or PINECONE ENVIRONMENT are not valid')
 

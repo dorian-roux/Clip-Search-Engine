@@ -123,7 +123,8 @@ def automaticalyValidate(configFilePath='config.py'):
             with open(configFilePath, "w") as f:
                 config_pinecone = f"""PINECONE_KEY = "{st.session_state['PINECONE_KEY']}"\nPINECONE_ENV = "{st.session_state['PINECONE_ENV']}"\nPINECONE_INDEX_NAME = "{st.session_state['PINECONE_INDEX_NAME']}"\n"""
                 config_fiftyone =  f"""FIFTYONE_DATASET = "{st.session_state['FIFTYONE_DATASET']}"\nFIFTYONE_DATASET_SPLIT = "{st.session_state['FIFTYONE_DATASET_SPLIT']}"\nFIFTYONE_MODEL = "{st.session_state['FIFTYONE_MODEL']}"\n"""
-                print(config_pinecone + config_fiftyone, file=f)
+                config_button = f"""DISABLE_CONFIG_BUTTONS= {st.session_state['DISABLE_CONFIG_BUTTONS']}\n"""
+                print(config_pinecone + config_fiftyone + config_button, file=f)
 
             st.session_state['config_validation'] = True
             return True
