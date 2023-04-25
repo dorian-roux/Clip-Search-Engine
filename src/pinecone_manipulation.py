@@ -27,7 +27,7 @@ def getPineconeIndexes(PINECONE_KEY='', pineconeEnv=''):
 
 
 # -- Create a PINECONE Index --
-def createPineconeIndex(PINECONE_KEY='', pineconeEnv='', pineconeIndexName="clip-search-engine", p_dimension=512, p_metric="cosine", p_pod_type="p1"):
+def createPineconeIndex(PINECONE_KEY='', PINECONE_ENV='', pineconeIndexName="clip-search-engine", p_dimension=512, p_metric="cosine", p_pod_type="p1"):
     """Create the Pinecone Index based on the users informations and Index Parameters.
     Args:
         PINECONE_KEY (str, optional): Represents the PINECONE private KEY. Defaults to ''.
@@ -37,14 +37,31 @@ def createPineconeIndex(PINECONE_KEY='', pineconeEnv='', pineconeIndexName="clip
         p_metric (str, optional): Represents the Metric use for measuring similarity. Defaults to "cosine".
         p_pod_type (str, optional): Represents the Pod Type. Defaults to "p1".
     """    
-    pinecone.init(api_key=PINECONE_KEY, environment=pineconeEnv)
+    pinecone.init(api_key=PINECONE_KEY, environment=PINECONE_ENV)
     try:
         pinecone.create_index(name=pineconeIndexName, dimension=p_dimension, metric=p_metric, pod_type=p_pod_type)
         return True
+    except pinecone.core.client.exceptions.ApiException as e:
+        return e
     except Exception:
         return Exception
 
-
+# -- Delete a PINECONE Index --
+def deletePineconeIndex(PINECONE_KEY='', PINECONE_ENV='', pineconeIndexName="clip-search-engine"):
+    """Delete the Pinecone Index based on the Index Name.
+    Args:
+        PINECONE_KEY (str, optional): Represents the PINECONE private KEY. Defaults to ''.
+        pineconeEnv (str, optional): Represents the PINECONE Environment related to the KEY. Defaults to ''.
+        pineconeIndexName (str, optional): Represents the PINECONE Name given by the User. Defaults to "clip-search-engine".
+    """   
+    pinecone.init(api_key=PINECONE_KEY, environment=PINECONE_ENV)
+    try:
+        pinecone.delete_index(pineconeIndexName)
+        return True
+    except pinecone.core.client.exceptions.ApiException as e:
+        return e
+    except Exception:
+        return Exception
 
 # -- Upsert Data into PINECONE --
 def chunks(iterable, batch_size=100):

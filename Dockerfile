@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . /app
 
+RUN echo 'DISABLE_CONFIG_BUTTONS = True' > /app/config.py
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
