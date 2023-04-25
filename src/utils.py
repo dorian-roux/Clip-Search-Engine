@@ -23,17 +23,17 @@ from pinecone_manipulation import getPineconeIndexes, createPineconeIndex, delet
 
 # -- Hide Streamlit Menu and Non Estethic Elements --
 def hideStreamlitElements():
-    # """Hide Streamlit elements that are not estethic."""    
-    # st.markdown("""
-    #     <style>
-    #         div[data-testid="stToolbar"] {visibility: hidden; height: 0%; position: fixed;}
-    #         div[data-testid="stDecoration"] {visibility: hidden; height: 0%; position: fixed;}
-    #         div[data-testid="stStatusWidget"] {visibility: hidden; height: 0%; position: fixed;}
-    #         #MainMenu {visibility: hidden; height: 0%;}
-    #         header {visibility: hidden; height: 0%;}
-    #         footer {visibility: hidden; height: 0%;}
-    #     </style>
-    # """, unsafe_allow_html=True) 
+    """Hide Streamlit elements that are not estethic."""    
+    st.markdown("""
+        <style>
+            div[data-testid="stToolbar"] {visibility: hidden; height: 0%; position: fixed;}
+            div[data-testid="stDecoration"] {visibility: hidden; height: 0%; position: fixed;}
+            div[data-testid="stStatusWidget"] {visibility: hidden; height: 0%; position: fixed;}
+            #MainMenu {visibility: hidden; height: 0%;}
+            header {visibility: hidden; height: 0%;}
+            footer {visibility: hidden; height: 0%;}
+        </style>
+    """, unsafe_allow_html=True) 
   
                 
     pass
