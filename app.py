@@ -18,10 +18,6 @@ import streamlit as st
 from PIL import Image
 
 # -- Custom Variables and Functions --
-# try:
-#     from config import *
-# except:
-#     pass
 from utils import stylizeStreamlitElements, automaticalyValidate, setupConfigP1, setupConfigP2
 from fiftyone_datasets_models import constructDictInf, getZoo_datasets, getZoo_models, loadZoo_dataset, loadZoo_model
 from pinecone_manipulation import upsert_Data, queryPinecone
