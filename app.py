@@ -50,7 +50,7 @@ def main():
     # -- STEP 1 - Initial the Interface + Variables --
     
     # --- Setup the Paths ---
-    configPath = '.streamlit/secrets.toml'
+    configPath = os.path.join(os.path.dirname(__file__), '.streamlit', 'secrets.toml')
     staticPath = os.path.join(os.path.dirname(__file__), 'src', 'static')
     pathImages_logo = os.path.join(staticPath, 'images', 'iconRelease.png')
     

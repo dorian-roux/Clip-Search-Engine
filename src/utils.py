@@ -369,12 +369,14 @@ def automaticalyValidate(configFilePath='.streamlit/secrets.toml'):
                     </div>
                 </div>
             '''
-            with open(configFilePath, "w") as f:
-                config_pinecone = f"""PINECONE_KEY = "{st.session_state['PINECONE']['USER']['KEY']['VALUE']}"\nPINECONE_ENV = "{st.session_state['PINECONE']['USER']['KEY']['ENVIRONMENT']}"\nPINECONE_INDEX_NAME = "{st.session_state['PINECONE']['USER']['INDEX_NAME']}"\n"""
-                config_fiftyone =  f"""FIFTYONE_DATASET = "{st.session_state['FIFTYONE']['USER']['DATASET']}"\nFIFTYONE_DATASET_SPLIT = "{st.session_state['FIFTYONE']['USER']['SPLIT']}"\nFIFTYONE_MODEL = "{st.session_state['FIFTYONE']['USER']['MODEL']}"\n"""
-                config_button = f"""DISABLE_CONFIG_BUTTONS = {str(st.session_state['CONFIG']['DISABLE_CONFIG_BUTTONS']).lower()}\n"""
-                print(config_pinecone + config_fiftyone + config_button, file=f)
-
+            try:
+                with open(configFilePath, "w") as f:
+                    config_pinecone = f"""PINECONE_KEY = "{st.session_state['PINECONE']['USER']['KEY']['VALUE']}"\nPINECONE_ENV = "{st.session_state['PINECONE']['USER']['KEY']['ENVIRONMENT']}"\nPINECONE_INDEX_NAME = "{st.session_state['PINECONE']['USER']['INDEX_NAME']}"\n"""
+                    config_fiftyone =  f"""FIFTYONE_DATASET = "{st.session_state['FIFTYONE']['USER']['DATASET']}"\nFIFTYONE_DATASET_SPLIT = "{st.session_state['FIFTYONE']['USER']['SPLIT']}"\nFIFTYONE_MODEL = "{st.session_state['FIFTYONE']['USER']['MODEL']}"\n"""
+                    config_button = f"""DISABLE_CONFIG_BUTTONS = {str(st.session_state['CONFIG']['DISABLE_CONFIG_BUTTONS']).lower()}\n"""
+                    print(config_pinecone + config_fiftyone + config_button, file=f)
+            except:
+                pass
             st.session_state['CONFIG']['VALIDATION'] = True
             return True
     return False
