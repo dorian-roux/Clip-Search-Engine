@@ -18,11 +18,11 @@ import streamlit as st
 from PIL import Image
 
 # -- Custom Variables and Functions --
-try:
-    from config import *
-except:
-    pass
-from utils import hideStreamlitElements, streamlitButton, automaticalyValidate, setupConfigP1, setupConfigP2
+# try:
+#     from config import *
+# except:
+#     pass
+from utils import stylizeStreamlitElements, automaticalyValidate, setupConfigP1, setupConfigP2
 from fiftyone_datasets_models import constructDictInf, getZoo_datasets, getZoo_models, loadZoo_dataset, loadZoo_model
 from pinecone_manipulation import upsert_Data, queryPinecone
 from embedding import get_text_embedding
@@ -42,7 +42,6 @@ def setupVariables(nameVariable, exceptValue=None):
     return exceptValue
 
 # -- Variables --
-DISABLE_CONFIG_BUTTONS = setupVariables('DISABLE_CONFIG_BUTTONS', True)
 
 
 # - MAIN - 
@@ -51,24 +50,28 @@ def main():
     # -- STEP 1 - Initial the Interface + Variables --
     
     # --- Setup the Paths ---
+    configPath = os.path.join(os.path.dirname(__file__), '.streamlit', 'secrets.toml')
     staticPath = os.path.join(os.path.dirname(__file__), 'src', 'static')
-    pathImages_logo = os.path.join(staticPath, 'images', 'iconCYTECH.png')
+    pathImages_logo = os.path.join(staticPath, 'images', 'iconRelease.png')
     
     # --- Setup CONFIG Variables ---
-    for variable in ['PINECONE_KEY', 'PINECONE_ENV', 'PINECONE_INDEX_NAME', 'FIFTYONE_DATASET', 'FIFTYONE_DATASET_SPLIT', 'FIFTYONE_MODEL']:
-        globals()[variable] = setupVariables(variable, exceptValue="")
-
+    for variable in ['PINECONE_KEY', 'PINECONE_ENV', 'PINECONE_INDEX_NAME', 'FIFTYONE_DATASET', 'FIFTYONE_DATASET_SPLIT', 'FIFTYONE_MODEL', 'DISABLE_CONFIG_BUTTONS']:
+        expVal = ""
+        if os.path.exists(configPath):
+            if variable in st.secrets.keys():
+                expVal = st.secrets[variable]
+        globals()[variable] = setupVariables(variable, exceptValue=expVal)
+    
     # --- Setup STREAMLIT Page --- 
     config_page_title, config_layout = 'CLIP - Search Engine', "wide"
     st.set_page_config(page_title=config_page_title, page_icon=pathImages_logo, layout=config_layout)  # Set Page Configuration
     st.markdown("<h1 style='text-align: center; color: black;'>CLIP - Search Engine - Text Requests to Images</h1>", unsafe_allow_html=True)
-    hideStreamlitElements()  # ---- Hide Streamlit Elements ----
-    streamlitButton() # ---- Change the Streamlit Button Style ----
+    stylizeStreamlitElements() # ---- Hide Streamlit Elements + Change the Streamlit Button Style ----
 
     # --- Setup the STREAMLIT Session State --- 
     if 'CONFIG' not in st.session_state:
         st.session_state['CONFIG'] = dict({
-            'DISABLE_CONFIG_BUTTONS': DISABLE_CONFIG_BUTTONS,
+            'DISABLE_CONFIG_BUTTONS': False if not DISABLE_CONFIG_BUTTONS else DISABLE_CONFIG_BUTTONS,
             'INFORMATION': '',
             'STARTUP_VERIF': False,
             'VALIDATION': False,
@@ -134,7 +137,7 @@ def main():
             return
         
         # --- STEP 3.3 - CONFIGURATION VALIDATION ---
-        if automaticalyValidate():
+        if automaticalyValidate(configFilePath=configPath):
             st.experimental_rerun()  
     
     
@@ -143,16 +146,21 @@ def main():
         if not st.session_state['LOAD']['DATASET']:
             with st.spinner(f"{st.session_state['FIFTYONE']['USER']['DATASET']} dataset is Loading..."):
                 st.session_state['LOAD']['DATASET'] = loadZoo_dataset(st.session_state['FIFTYONE']['USER']['DATASET'], st.session_state['FIFTYONE']['USER']['SPLIT'].split(','))   
+        st.write(f"""<div style="text-align:center; margin-top:10px; margin-bottom:-25px"><h3 style="font-size:25px; font-family: monospace"> FIFTYONE DATASET - {st.session_state['FIFTYONE']['USER']['DATASET'].upper()} | LOADED ✅</h3></div>""", unsafe_allow_html=True)
         if not st.session_state['LOAD']['MODEL']:
             with st.spinner(f"{st.session_state['FIFTYONE']['USER']['MODEL']} model is Loading..."):
                 st.session_state['LOAD']['MODEL'] = loadZoo_model(modelName=st.session_state['FIFTYONE']['USER']['MODEL'])
+        st.write(f"""<div style="text-align:center; margin-top:10px; margin-bottom:-25px"><h3 style="font-size:25px; font-family: monospace"> FIFTYONE MODEL - {st.session_state['FIFTYONE']['USER']['MODEL'].upper()} | LOADED ✅</h3></div>""", unsafe_allow_html=True)
         if not st.session_state['LOAD']['DICT_DATASET']:
             with st.spinner(f"Embeddings and Data Construction in Progress..."):
                 st.session_state['LOAD']['DATASET'].compute_embeddings(st.session_state['LOAD']['MODEL'], embeddings_field="embedding")
                 st.session_state['LOAD']['DICT_DATASET'] = constructDictInf(st.session_state['LOAD']['DATASET'])
+        st.write(f"""<div style="text-align:center; margin-top:10px; margin-bottom:-25px"><h3 style="font-size:25px; font-family: monospace"> DATA EMBEDDING - {st.session_state['FIFTYONE']['USER']['MODEL'].upper()} | DONE ✅</h3></div>""", unsafe_allow_html=True)
         with st.spinner(f"Upserting Data into Pinecone Index in Progress..."):
             st.session_state['PINECONE']['USER']['INDEX'].delete(deleteAll='true')
             upsert_Data(st.session_state['PINECONE']['USER']['INDEX'], st.session_state['LOAD']['DICT_DATASET'])
+        st.write(f"""<div style="text-align:center; margin-top:10px; margin-bottom:-25px"><h3 style="font-size:25px; font-family: monospace"> DATA UPSERT into PINECONE INDEX | DONE ✅</h3></div>""", unsafe_allow_html=True)
+        time.sleep(2)
         st.session_state['CONFIG']['LFDMIP'] = False
         st.session_state['CONFIG']['CLIP_MODEL'] = st.session_state['LOAD']['MODEL']
         st.session_state['CONFIG']['PHASE_1']['VALIDATION'] = True
@@ -164,19 +172,20 @@ def main():
     # -- STEP 5 - DISPLAY THE CONFIGURATION INFORMATION -- 
     if st.session_state['CONFIG']['INFORMATION']:
         st.write(st.session_state['CONFIG']['INFORMATION'], unsafe_allow_html=True)
-        _, col1, _, col2, _ = st.columns([1.75, 4, 0.5, 4, 1.75]) 
-        if col1.button('Modify/Update the Configuration', disabled=st.session_state['CONFIG']['DISABLE_CONFIG_BUTTONS']):
-            st.session_state['PINECONE']['USER']['KEY']['VALUE'] = ""
-            st.session_state['PINECONE']['USER']['INDEX_NAME'] = ""
-            st.session_state['CONFIG']['VALIDATION'] = False
-            st.session_state['CONFIG']['INFORMATION'] = ''
-            st.session_state['CONFIG']['PHASE_1']['VALIDATION'] = False
-            st.session_state['CONFIG']['PHASE_2']['VALIDATION'] = False
-            st.experimental_rerun()
-        if col2.button('Re-Load the MODEL/DATASET', disabled=st.session_state['CONFIG']['DISABLE_CONFIG_BUTTONS']):
-            st.session_state['LFDMIP'] = True
-            st.experimental_rerun()
-            
+        if not st.session_state['CONFIG']['DISABLE_CONFIG_BUTTONS']:
+            _, col1, _, col2, _ = st.columns([1.75, 4, 0.5, 4, 1.75]) 
+            if col1.button('Modify/Update the Configuration'):
+                st.session_state['PINECONE']['USER']['KEY']['VALUE'] = ""
+                st.session_state['PINECONE']['USER']['INDEX_NAME'] = ""
+                st.session_state['CONFIG']['VALIDATION'] = False
+                st.session_state['CONFIG']['INFORMATION'] = ''
+                st.session_state['CONFIG']['PHASE_1']['VALIDATION'] = False
+                st.session_state['CONFIG']['PHASE_2']['VALIDATION'] = False
+                st.experimental_rerun()
+            if col2.button('Re-Load the MODEL/DATASET'):
+                st.session_state['LFDMIP'] = True
+                st.experimental_rerun()
+                
             
      # -- STEP 6 - QUERY | SEGMENTIC REQUEST -- 
     st.markdown('<br>', unsafe_allow_html=True)

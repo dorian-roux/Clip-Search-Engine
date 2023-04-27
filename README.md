@@ -70,17 +70,7 @@ git clone https://github.com/dorian-roux/Clip-Search-Engine
 Secondly, you must create a find your Picone Key parameters. To do so, you need to register in their [website](https://pinecone.io). Then you need to find the [Pinecone Console](https://app.pinecone.io/organizations) and keep both the **Pinecone Key Value** and **Pinecone Key Environement**
 
 
-#### **3° [Recommended] - Modify the State within the Dockerfile**
-To prevent the modification on the deployed application, we define within the Dockerfile, a boolean `DISABLE_CONFIG_BUTTONS` which is set to True. If you wish to try multiple configurations within the app, you must modify the following line:
-```bash
-RUN echo 'DISABLE_CONFIG_BUTTONS = True' > /app/config.py
-```
-by this next line:
-```bash
-RUN echo 'DISABLE_CONFIG_BUTTONS = False' > /app/config.py
-```
-
-#### **4° - Build the Docker Image**
+#### **3° - Build the Docker Image**
 Thirdly, you need to build the Docker Image based on this repository Dockerfile. To do so, you can use the following command.
 ```bash
 docker build -t {TAG} .
@@ -88,7 +78,7 @@ docker build -t {TAG} .
 <u>Note:</u> &nbsp; `{TAG}` is the name you want to give to your Docker Image. It is used to identify it later.
 
 
-#### **5° - Run the Docker Container**
+#### **4° - Run the Docker Container**
 Finally, you need to run the Docker Container based on the Docker Image you just built. To do so, you can use the following command.
 ```bash
 docker run -p 8501:8501 {TAG}
