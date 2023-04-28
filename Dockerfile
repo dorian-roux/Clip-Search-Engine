@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
+RUN echo "" > .streamlit/secret.toml
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \

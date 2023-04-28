@@ -53,11 +53,10 @@ def main():
     # --- Setup CONFIG Variables ---
     for variable in ['PINECONE_KEY', 'PINECONE_ENV', 'PINECONE_INDEX_NAME', 'FIFTYONE_DATASET', 'FIFTYONE_DATASET_SPLIT', 'FIFTYONE_MODEL', 'DISABLE_CONFIG_BUTTONS']:
         expVal = ""
-        if os.path.exists(configPath):
-            if variable in st.secrets.keys():
-                expVal = st.secrets[variable]
+        if variable in st.secrets.keys():
+            expVal = st.secrets[variable]
         globals()[variable] = setupVariables(variable, exceptValue=expVal)
-    
+    # 
     # --- Setup STREAMLIT Page --- 
     config_page_title, config_layout = 'CLIP - Search Engine', "wide"
     st.set_page_config(page_title=config_page_title, page_icon=pathImages_logo, layout=config_layout)  # Set Page Configuration
