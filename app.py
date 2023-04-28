@@ -57,8 +57,9 @@ def main():
     # --- Setup CONFIG Variables ---
     for variable in ['PINECONE_KEY', 'PINECONE_ENV', 'PINECONE_INDEX_NAME', 'FIFTYONE_DATASET', 'FIFTYONE_DATASET_SPLIT', 'FIFTYONE_MODEL', 'DISABLE_CONFIG_BUTTONS']:
         expVal = ""
-        if variable in st.secrets.keys():
-            expVal = st.secrets[variable]
+        if os.path.exists(configPath):
+            if variable in st.secrets.keys():
+                expVal = st.secrets[variable]
         globals()[variable] = setupVariables(variable, exceptValue=expVal)
     # 
     # --- Setup STREAMLIT Page --- 
